@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,3 +16,6 @@ Route::post('/register/user', [AuthController::class,'registerUser'])->name('reg
 
 Route::get('signIn/user', [AuthController::class,'signInUser'])->name('signedIn.user');
 Route::get('/logout', [AuthController::class,'logout'])->name('logout');
+
+Route::get('admin/dashboard', [HomeController::class,'adminDasboard'])->
+middleware(['auth', 'admin']);

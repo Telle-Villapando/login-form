@@ -37,8 +37,8 @@ class AuthController extends Controller
         return redirect(route('user.signIn'));
     }
 
-    public function signInUser(){
-        // Fix validation syntax and typo ('requed' -> 'required')
+    public function signInUser(Request $request){
+      
         Validator::make(request()->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
@@ -46,12 +46,19 @@ class AuthController extends Controller
 
         // Use Auth::attempt instead of auth()->attempt for clarity
         if (Auth::attempt(request()->only(['email', 'password']))) {
+            
+            if($request ->user()->role === 'admin'){
+                return redirect('admin/dashboard');
+            }
+
             return redirect(route('user.dashboard'));
         }
 
         // Redirect back with an error message if credentials are invalid
         return redirect()->back()->withErrors(['email' => 'Invalid credentials']);
     }
+
+
     public function logout(){
         Auth::logout();
         return redirect(route('user.signIn'));
