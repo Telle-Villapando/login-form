@@ -55,5 +55,20 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 
 Route::put('/user/update-avatar', [UserController::class, 'updateAvatar'])->name('user.updateAvatar');
-Route::get('user/forgot/password',[UserController::class,'forgotPassword'])->name('user.forgotPassword');
-Route::post('user/forgetPassword/email',[ForgetPasswordController::class,'forgetPasswordPost'])->name('user.forgetPasswordPost');
+
+//Route::get('user/forgot/password',[UserController::class,'forgotPassword'])->name('user.forgotPassword');
+//Route::post('user/forgetPassword/email',[ForgetPasswordController::class,'forgetPasswordPost'])->name('user.forgetPasswordPost');
+//Route::get('user/resetPassword/{token}',[ForgetPasswordController::class,'resetPassword'])->name('user.resetPassword');
+//Route::post('user/resetPassword', [ForgetPasswordController::class, 'resetPasswordPost'])->name('user.resetPasswordPost');
+
+// Route for forgot password form (GET)
+Route::get('user/forgot/password', [UserController::class, 'forgotPassword'])->name('user.forgotPassword');
+
+// Route for submitting forgot password request (POST)
+Route::post('user/forgetPassword/email', [ForgetPasswordController::class, 'forgetPasswordPost'])->name('user.forgetPasswordPost');
+
+// Route for reset password form (GET)
+Route::get('user/resetPassword/{token}', [ForgetPasswordController::class, 'resetPassword'])->name('user.resetPassword');
+
+// Route for submitting new password (POST)
+Route::post('user/resetPassword', [ForgetPasswordController::class, 'resetPasswordPost'])->name('user.resetPasswordPost');

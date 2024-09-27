@@ -31,22 +31,39 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <!-- Sign in -->
+    <!-- New password -->
     <div class="container mx-auto my-10 max-w-md p-6 bg-white shadow-lg rounded-lg" id="signIn">
         <h1 class="text-2xl font-bold text-center mb-6">Forgot your password?</h1>
         <p class="text-center my-4 text-gray-500">Forgot your password? bobo amp</p>
-        <form action="{{ route('user.forgetPasswordPost') }}" method="post" class="space-y-4">
+        <form action="{{route('user.resetPasswordPost')}}" method="post" class="space-y-4">
             @csrf 
+            @method('post')
+
+            <input type="text" hidden value="{{$token}}" name="token">
             <div class="relative flex items-center">
                 <i class="fas fa-envelope absolute left-3 text-gray-400"></i>
                 <input class="pl-10 w-full py-2 border-b border-gray-400 focus:outline-none focus:border-indigo-600" type="email" name="email" id="email" placeholder="Email" required />
+               
             </div>
-      
-            <input class="w-full py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition duration-200 cursor-pointer" type="submit" value="Email Password Reset Link" name="forgotPassword" />
+            <div class="relative flex items-center">
+                <i class="fas fa-envelope absolute left-3 text-gray-400"></i>
+                <input class="pl-10 w-full py-2 border-b border-gray-400 focus:outline-none focus:border-indigo-600" type="password" name="password" id="password" placeholder="Enter new password" required />
+               
+            </div>
+            <div class="relative flex items-center">
+                <i class="fas fa-envelope absolute left-3 text-gray-400"></i>
+                <input class="pl-10 w-full py-2 border-b border-gray-400 focus:outline-none focus:border-indigo-600" type="password" name="password_confirmation" id="passwordConfirmation" placeholder="Confirm new password" required />
+               
+            </div>
+
+            
+            <input class="w-full py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition duration-200 cursor-pointer" type="submit"  name="resetPassword" />
         </form> 
-        <p class="text-right mt-4">
-            <a href="{{ route('user.signIn') }}" class="text-indigo-500 hover:underline">Return to Log in</a>
-        </p>
+        
+        
     </div>
+
+
 </body>
+
 </html>
