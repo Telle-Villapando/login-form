@@ -34,7 +34,7 @@
     <!-- Sign in -->
     <div class="container mx-auto my-10 max-w-md p-6 bg-white shadow-lg rounded-lg" id="signIn">
         <h1 class="text-2xl font-bold text-center mb-6">Forgot your password?</h1>
-        <p class="text-center my-4 text-gray-500">Forgot your password? bobo amp</p>
+        <p class="text-center my-4 text-gray-500">Type your email and click the email password reset button and check your email</p>
         <form action="{{ route('user.forgetPasswordPost') }}" method="post" class="space-y-4">
             @csrf 
             <div class="relative flex items-center">

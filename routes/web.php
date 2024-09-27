@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -8,10 +9,15 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ForgetPasswordController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Laravel\Socialite\Facades\Socialite;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/auth/{provider}/redirect', [ProviderController::class,'redirect']);
+Route::get('/auth/{provider}/callback', [ProviderController::class,'callback']);
 
 Route::get('/register', [AuthController::class, 'registerRoute'])->name('user.register');
 Route::get('/signIn', [AuthController::class, 'signInRoute'])->name('user.signIn');
@@ -55,11 +61,6 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 
 Route::put('/user/update-avatar', [UserController::class, 'updateAvatar'])->name('user.updateAvatar');
-
-//Route::get('user/forgot/password',[UserController::class,'forgotPassword'])->name('user.forgotPassword');
-//Route::post('user/forgetPassword/email',[ForgetPasswordController::class,'forgetPasswordPost'])->name('user.forgetPasswordPost');
-//Route::get('user/resetPassword/{token}',[ForgetPasswordController::class,'resetPassword'])->name('user.resetPassword');
-//Route::post('user/resetPassword', [ForgetPasswordController::class, 'resetPasswordPost'])->name('user.resetPasswordPost');
 
 // Route for forgot password form (GET)
 Route::get('user/forgot/password', [UserController::class, 'forgotPassword'])->name('user.forgotPassword');

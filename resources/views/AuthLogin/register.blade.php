@@ -11,6 +11,24 @@
 </head>
 
 <body class="bg-gradient-to-r from-gray-200 to-indigo-200 font-poppins">
+       {{-- Display validation errors --}}
+       @if ($errors->any())
+       <div>
+           @foreach ($errors->all() as $error)
+               <div class="alert alert-danger">{{ $error }}</div>
+           @endforeach
+       </div>
+   @endif
+
+   {{-- Display session error message --}}
+   @if (session()->has('error'))
+       <div class="alert alert-danger">{{ session('error') }}</div>
+   @endif
+
+   {{-- Display session success message --}}
+   @if (session()->has('success'))
+       <div class="alert alert-success">{{ session('success') }}</div>
+   @endif
     <!-- Register -->
     <div class="container mx-auto my-10 max-w-md p-6 bg-white shadow-lg rounded-lg" id="signUp">
         <h1 class="text-2xl font-bold text-center mb-6">Register</h1>

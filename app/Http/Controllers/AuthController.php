@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator; // Import Validator facade
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\RateLimiter;
 
 class AuthController extends Controller
 {
@@ -37,26 +39,45 @@ class AuthController extends Controller
         return redirect(route('user.signIn'));
     }
 
-    public function signInUser(Request $request){
-      
-        Validator::make(request()->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ])->validate();
+    public function signInUser(Request $request)
+    {
+        $key = 'signIn:' . $request->ip(); // Unique key for rate limiting
+        $maxAttempts = 3; // Max login attempts
+        $decayMinutes = 1; // Minutes before the attempts are reset
 
-        // Use Auth::attempt instead of auth()->attempt for clarity
-        if (Auth::attempt(request()->only(['email', 'password']))) {
-            
-            if($request ->user()->role === 'admin'){
-                return redirect('admin/dashboard');
-            }
-
-            return redirect(route('user.dashboard'));
+         // Check the rate limit
+        if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
+        return redirect()->back()->with('message', 'Too many login attempts. Please try again later.');
         }
 
-        // Redirect back with an error message if credentials are invalid
-        return redirect()->back()->withErrors(['email' => 'Invalid credentials']);
+        // Validate the request input
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+    
+        // Attempt to authenticate the user with the 'remember me' option
+        if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
+            // If "Remember Me" is checked, store the email in a cookie
+            if ($request->filled('remember')) {
+                Cookie::queue('remembered_email', $request->email, 60*24*30); // Store for 30 days
+            } else {
+                Cookie::queue(Cookie::forget('remembered_email')); // Remove the cookie if unchecked
+            }
+    
+            // Redirect to appropriate dashboard
+            if ($request->user()->role === 'admin') {
+                return redirect('admin/dashboard');
+            }
+            return redirect('user/dashboard');
+        }
+         // Increment the attempts if login fails
+         RateLimiter::hit($key, $decayMinutes * 60);
+    
+        // If authentication fails, redirect back with an error message
+        return redirect()->back()->withErrors(['email' => 'Invalid credentials, try again']);
     }
+    
 
 
     public function logout(){

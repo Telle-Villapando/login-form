@@ -1,0 +1,8 @@
+#toggle-arrow {
+    display: inline-block;
+    transition: transform 0.3s ease; /* Add transition for smooth effect */
+}
+
+.hidden {
+    display: none; /* Example hidden style */
+}
